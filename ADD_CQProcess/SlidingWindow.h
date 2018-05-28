@@ -32,17 +32,14 @@ protected:
 
 	list<EventPtr> events;
 	
-
 	//it increase 1 over one event arrival. if it equals to eventIntervalLen, 
 	//It triggers to result the result, and it is set to 0.
 	int eventTriggerCount = 0;
 
 	WINDOW_TYPE windowType;
 
-
 	SharedWindow<string>* shareWindow = nullptr;
 	
-
 public:
 	SlidingWindow(){}
 
@@ -56,10 +53,6 @@ public:
 
 	virtual void setSharedWindow(SharedWindow<string>* sharedWindow) = 0;
 
-	/*void setTimeInterval(long timeLength) {
-		this->timeIntervalLen = timeLength;
-	}*/
-
 	void setEventWindow(long startEvent, long offset) {
 		this->startEvent = startEvent;
 		this->endEvent = startEvent + offset;
@@ -67,10 +60,6 @@ public:
 		this->windowType = getWindowType();
 		//this->events = new list<EventPtr>(startEvent+offset);
 	}
-
-	//void setEventInterval(long eventNum) {
-	//	this->eventIntervalLen = eventNum;
-	//}
 
 	virtual void updateWindow() = 0;
 

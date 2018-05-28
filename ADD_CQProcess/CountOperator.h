@@ -14,22 +14,33 @@
 class CountOperator : public Query, public SlidingWindow {
 public:
 
+	/*
+	@param timeStride: time period of pre-processing
+	@param topicName: topic name of the event. Indicate the query only processes 
+	such kind of event stream.
+	*/
 	CountOperator(int timeStride, string topicName)
 		:Query(topicName) {
 		SlidingWindow::timeStride = timeStride;
 		QueryManager::addTimeTriggerQuery(topicName, this);
 	}
 
+	/*
+	@param eventStride: event period of pre-processing, 
+	i.e. preporcess after every eventStride number events arrive.
+	*/
 	CountOperator(long eventStride, string topicName)
 		:Query(topicName) {
 		SlidingWindow::eventStride = eventStride;
 		QueryManager::addEventTriggerQuery(topicName, this);
 	}
 
-	~CountOperator() {
-	}
+	~CountOperator() {}
 
+	//insert event to the sliding window
 	void insert(EventPtr event);
+
+	//display the query result.
 	void display();
 
 	//set shared window and associate the query with the shared window.
@@ -39,16 +50,17 @@ public:
 	}
 
 private:
-	long currCount = 0;
-	void updateWindow();
+	long currCount = 0;//the result of the query.
+	void updateWindow();//update sliding window, including own sliding window and shared sliding window.
+
+	//depending on the attribute of SlidingWindow::eventStride.
+	//if eventStride=2, means output query results every 2 events arrive.
 	void eventTrigger();
 
+	//the event number of this query sharing in the shared window.
 	long count_shared_window = 0;
 
-	void updateOwnWindow();
-
-	void updateSharedWindow();
-
+	//share an event of the query in the shared window.
 	void addEventInSharedWin(EventPtr event);
 };
 

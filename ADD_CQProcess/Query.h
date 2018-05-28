@@ -18,8 +18,10 @@
 
 class Query {
 protected:
+	//topic name of event stream. 
 	string topicName;
 
+	//query condition of this query.
 	Condition * condition = nullptr;
 
 public:
@@ -32,6 +34,8 @@ public:
 		this->topicName = topicName;
 	}
 
+	//the name of this query, also indicates the query ID.
+	//so each query has an unique name.
 	string name = "";
 
 	void setTopic(string topicName) { this->topicName = topicName; }

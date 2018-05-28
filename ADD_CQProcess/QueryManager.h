@@ -41,6 +41,10 @@ public:
 		return nullptr;
 	}
 
+	/*
+	get the CQs whose query conditon match the event.
+	If it's an aggregate operator, the event will copy in the associated sliding aggregate window.
+	*/
 	static void matchCQs(EventPtr event) {
 		//time trigger queries
 		for (auto iter = timeTriggerQueries.begin(); iter != timeTriggerQueries.end(); iter++) {//map
@@ -65,6 +69,7 @@ public:
 		}
 	}
 
+	//inert the event to the sliding window of the query.
 	static void updateCQ(Query* query, EventPtr eventPtr) {
 		query->insert(eventPtr);
 	}

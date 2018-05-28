@@ -42,6 +42,7 @@ public:
 
 	void directionGreater(float direction, bool isInclusive);
 
+	//whether the event is satisfied the query condition.
 	bool satisfyConditon() {
 		bool result = true;
 		if (speedGr != DEFAULT_VALUE) {

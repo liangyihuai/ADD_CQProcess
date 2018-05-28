@@ -112,7 +112,7 @@ void generateEvents() {
 			IncomingManager::reveiveEvents(msg);
 			mutex.unlock();
 		}
-		this_thread::sleep_for(chrono::milliseconds(500));
+		//this_thread::sleep_for(chrono::milliseconds(500));
 		len = random(1, 7);
 		//cout << "event num in the buffer: " << IncomingManager::bufferSize() << "  \n";
 	}
