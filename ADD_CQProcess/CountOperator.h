@@ -27,11 +27,16 @@ public:
 	}
 
 	~CountOperator() {
-		this->events.clear();
 	}
 
 	void insert(EventPtr event);
 	void display();
+
+	//set shared window and associate the query with the shared window.
+	void setSharedWindow(SharedWindow<string>* sharedWindow) {
+		this->shareWindow = sharedWindow;
+		shareWindow->addQuery(Query::name);
+	}
 
 private:
 	long currCount = 0;
@@ -48,7 +53,7 @@ private:
 };
 
 void CountOperator::display() {
-	std::cout << "==  count" << name << " result: "<< currCount << "=="<<std::endl;
+	std::cout << "==  count" << name << " result: "<< currCount <<std::endl;
 }
 
 void CountOperator::updateWindow() {
@@ -64,7 +69,7 @@ void CountOperator::updateWindow() {
 		if (currSize != 0) {
 			latestEvent = events.back();
 		}
-		if(shareWindow->back()){
+		if(shareWindow && shareWindow->back()){
 			if (currSize != 0 && shareWindow->back()->time > latestEvent->time)
 				latestEvent = shareWindow->back();
 			else if (currSize == 0) latestEvent = shareWindow->back();
@@ -136,7 +141,7 @@ void CountOperator::insert(EventPtr event) {
 		shareWindow->getQueryCondition()->setCurrentEvent(event);
 		//satisfied the query condition of shared window
 		if (shareWindow->getQueryCondition()->satisfyConditon()) {
-			shareWindow->addEvent(event);
+			addEventInSharedWin(event);
 			inSharedWin = true;
 		}
 	}
@@ -148,6 +153,8 @@ void CountOperator::insert(EventPtr event) {
 	else {
 		//time trigger
 	}
+
+	cout << "own window size "<< name << ": " << events.size() << endl;
 }
 
 void CountOperator::eventTrigger() {
@@ -160,6 +167,7 @@ void CountOperator::eventTrigger() {
 	}
 }
 
+//if add to the shared window, return true, other wise return false;
 void CountOperator::addEventInSharedWin(EventPtr event) {
 	count_shared_window++;
 	if (shareWindow->back() == event) return;

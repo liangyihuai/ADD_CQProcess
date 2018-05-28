@@ -10,7 +10,7 @@
 #include "Query.h"
 #include "Condition.h"
 
-namespace sharedWindow {
+namespace shared {
 	template <class T>
 	class Node {
 	public:
@@ -70,20 +70,20 @@ namespace sharedWindow {
 			return result;
 		}
 
-		T front() {
+		Node<T>* front() {
 			if (head == nullptr) {
 				cout << "the queue is empty!" << endl;
 				throw 1;
 			}
-			return head->data;
+			return head;
 		}
 
-		T back() {
+		Node<T>* back() {
 			if (head == nullptr) {
 				cout << "the queue is empty!" << endl;
 				throw 1;
 			}
-			return tail->data;
+			return tail;
 		}
 
 		int getSize() {
@@ -92,7 +92,7 @@ namespace sharedWindow {
 	};
 }
 
-using namespace sharedWindow;
+using namespace shared;
 
 template <class T> // type of query name
 class SharedWindow {
@@ -117,43 +117,61 @@ private:
 
 	SharedQueue<EventPtr> events;
 
-	Condition *queryCondition;
+	Condition *queryCondition = nullptr;
 
-	bool pop_front(Node<EventPtr>* endPointer);
+	//bool pop_front(Node<EventPtr>* endPointer);
+
+	//store query ID of empty endPointers
+	list<string> emptyPointers;
+
 };
 
 template <class T>
 void SharedWindow<T>::addEvent(EventPtr event) {
-	if (!events.getHead()) {
+	this->events.push_back(event);
+
+	//set the endPointer which points to null.
+	Node<EventPtr>* lastNode = events.back();
+	while (!emptyPointers.empty()) {
+		string queryID = emptyPointers.front();
+		this->topicName_event_map[queryID] = lastNode;
+		lastNode->use_count++;
+		emptyPointers.pop_front();
+	}
+
+	if (events.getHead()->data == event) {//only one data in the window
 		for (auto iter = topicName_event_map.begin(); iter != topicName_event_map.end(); iter++) {
-			topicName_event_map[iter->first] = event;
+			topicName_event_map[iter->first] = events.getHead();//set endPointers
+			events.getHead()->use_count++;
 		}
 	}
-	this->events.push_back(event);
+	
+	cout << "shared window size: " << events.getSize() << endl;
 }
 
 template <class T>
 bool SharedWindow<T>::pop_front(T queryID) {
-	Node<EventPtr>* endPointer = this->topicName_event_map[queryID];
-	return pop_front(endPointer);
-}
 
-template <class T>
-bool SharedWindow<T>::pop_front(Node<EventPtr>* endPointer) {
+	Node<EventPtr>* endPointer = this->topicName_event_map[queryID];
+	
 	if (!endPointer) return false;
 
 	if (endPointer->use_count == 1 && endPointer == events.getHead()) {
 		endPointer = endPointer->next;
-		if(endPointer) endPointer->use_count++;
+		topicName_event_map[queryID] = endPointer;
+		if (endPointer) endPointer->use_count++;
 		events.pop_front();
 	}
-	else{
+	else {
 		endPointer->use_count--;
 		endPointer = endPointer->next;
-		if(endPointer)endPointer->use_count++;
+		topicName_event_map[queryID] = endPointer;
+		if (endPointer)endPointer->use_count++;
 	}
+	if (!endPointer)this->emptyPointers.push_back(queryID);
 	return true;
 }
+
 
 
 template <class T>
@@ -169,7 +187,7 @@ EventPtr SharedWindow<T>::front(T topicID) {
 
 template <class T>
 EventPtr SharedWindow<T>::back() {
-	if (!events.getTail)return nullptr;
+	if (!events.getTail())return nullptr;
 	return events.getTail()->data;
 }
 

@@ -54,9 +54,7 @@ public:
 		//this->events = new list<EventPtr>(DEFAULT_WINDOW_CAPACITY);
 	}
 
-	void setSharedWindow(SharedWindow<int>* sharedWindow) {
-		this->shareWindow = sharedWindow;
-	}
+	virtual void setSharedWindow(SharedWindow<string>* sharedWindow) = 0;
 
 	/*void setTimeInterval(long timeLength) {
 		this->timeIntervalLen = timeLength;

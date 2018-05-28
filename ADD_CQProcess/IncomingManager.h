@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "QueryManager.h"
 #include <list>
+#include <boost/thread/lock_guard.hpp>
+#include <boost/signals2/mutex.hpp>
 
 #include "MyType.h"
 
@@ -37,7 +39,6 @@ private:
 	static list<EventPtr> eventQueue;
 
 	static int size;
-
 	
 };
 
@@ -55,6 +56,8 @@ void IncomingManager::reveiveEvents(EventPtr eventPtr) {
 	
 }
 
+boost::signals2::mutex mutex;
+
 //ouput the event from the queue
 void IncomingManager::outputEvents() {
 	EventPtr event = nullptr;
@@ -65,12 +68,18 @@ void IncomingManager::outputEvents() {
 		}
 		if (!eventQueue.empty()) {
 			event = eventQueue.front();
+
+			mutex.lock();
 			eventQueue.pop_front();
-			QueryManager::matchCQs(event);
 			size--;
+			mutex.unlock();
+
+			QueryManager::matchCQs(event);
+			
 		}
 	}
 }
+
 
 
 void generateEvents() {
@@ -99,9 +108,11 @@ void generateEvents() {
 			msg->time = getTime();
 
 			//cout << *msg << endl;
+			mutex.lock();
 			IncomingManager::reveiveEvents(msg);
+			mutex.unlock();
 		}
-		this_thread::sleep_for(chrono::milliseconds(10));
+		this_thread::sleep_for(chrono::milliseconds(500));
 		len = random(1, 7);
 		//cout << "event num in the buffer: " << IncomingManager::bufferSize() << "  \n";
 	}
