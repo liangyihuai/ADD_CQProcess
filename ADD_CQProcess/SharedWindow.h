@@ -107,7 +107,13 @@ public:
 
 	void setQueryCondition(Condition * con) { this->queryCondition = con; }
 
-	Condition* getQueryCondition() { return this->queryCondition; }
+	Condition* getQueryCondition() {
+		if (!queryCondition) {
+			cout << "the queryCondition is nullptr" << endl;
+			throw 1;
+		}
+		return this->queryCondition; 
+	}
 
 	//get the first event of the specified query.
 	EventPtr front(T queryID);
@@ -155,7 +161,7 @@ void SharedWindow<T>::addEvent(EventPtr event) {
 		}
 	}
 	
-	cout << "shared window size: " << events.getSize() << endl;
+	//cout << "shared window size: " << events.getSize() << endl;
 }
 
 template <class T>

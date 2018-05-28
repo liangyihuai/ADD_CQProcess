@@ -47,17 +47,27 @@ public:
 	*/
 	static void matchCQs(EventPtr event) {
 		//time trigger queries
-		for (auto iter = timeTriggerQueries.begin(); iter != timeTriggerQueries.end(); iter++) {//map
-			set<Query*> * vec = iter->second;
-			for (auto vecIter = vec->begin(); vecIter != vec->end(); vecIter++) {//vector
-				if ((*vecIter)->matchingCondition(event)) {
-					updateCQ(*vecIter, event);
-				}
-			}	
-		}
+		//for (auto iter = timeTriggerQueries.begin(); iter != timeTriggerQueries.end(); iter++) {//map
+		//	set<Query*> * vec = iter->second;
+		//	for (auto vecIter = vec->begin(); vecIter != vec->end(); vecIter++) {//vector
+		//		if ((*vecIter)->matchingCondition(event)) {
+		//			updateCQ(*vecIter, event);
+		//		}
+		//	}	
+		//}
+
 		//event trigger queries
-		for (auto iter = eventTriggerQueries.begin(); iter != eventTriggerQueries.end(); iter++) {//map
-			set<Query*> * vec = iter->second;
+		//for (auto iter = eventTriggerQueries.begin(); iter != eventTriggerQueries.end(); iter++) {//map
+		//	set<Query*> * vec = iter->second;
+		//	for (auto vecIter = vec->begin(); vecIter != vec->end(); vecIter++) {//vector
+		//		//cout << *event << endl;
+		//		if ((*vecIter)->matchingCondition(event)) {
+		//			//cout << "-count-" << *event << endl;
+		//			updateCQ(*vecIter, event);
+		//		}
+		//	}
+		if (eventTriggerQueries.find(event->topicName) != eventTriggerQueries.end()) {
+			set<Query*> * vec = eventTriggerQueries[event->topicName];
 			for (auto vecIter = vec->begin(); vecIter != vec->end(); vecIter++) {//vector
 				//cout << *event << endl;
 				if ((*vecIter)->matchingCondition(event)) {
@@ -65,8 +75,9 @@ public:
 					updateCQ(*vecIter, event);
 				}
 			}
-
 		}
+
+		//}
 	}
 
 	//inert the event to the sliding window of the query.

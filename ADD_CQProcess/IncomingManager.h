@@ -86,7 +86,7 @@ void generateEvents() {
 	cout << "start to generate events..." << endl;
 	//srand((unsigned)time(NULL));
 
-	string topicNames[] = { "car1" };
+	string topicNames[] = { "car1", "car2", "car3" };
 
 	int len = 1;
 	
@@ -100,7 +100,7 @@ void generateEvents() {
 			boost::shared_ptr<Event> msg(new Event());
 			msg->id = IncomingManager::eventID++;
 			msg->direction = randomFloat(0, 360);
-			msg->topicName = topicNames[0];
+			msg->topicName = topicNames[randomInt(0, 3)];
 			msg->elevation = randomFloat(-30, 100);
 			msg->speed = randomFloat(-30, 100);
 			msg->longitude = randomFloat(0, 182);

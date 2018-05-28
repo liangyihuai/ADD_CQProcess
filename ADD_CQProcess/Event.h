@@ -4,6 +4,7 @@
 #define EVENT
 
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -69,6 +70,7 @@ public:
 
 ostream& operator<< (ostream &os, const Event &e) {
 	os << "id:" << e.id
+		<< ", topic:"<<e.topicName
 		<< ", time:" << e.time
 		<< ",lon:" << e.longitude << ",lat:" << e.latitude
 		<< ", elev:" << e.elevation

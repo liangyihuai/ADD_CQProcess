@@ -65,7 +65,7 @@ private:
 };
 
 void CountOperator::display() {
-	std::cout << "==  count" << name << " result: "<< currCount <<std::endl;
+	//std::cout << "topic: "<< topicName<<", count" << name << " result: "<< currCount <<std::endl;
 }
 
 void CountOperator::updateWindow() {
@@ -166,7 +166,7 @@ void CountOperator::insert(EventPtr event) {
 		//time trigger
 	}
 
-	cout << "own window size "<< name << ": " << events.size() << endl;
+	//cout << "own window size "<< name << ": " << events.size() << endl;
 }
 
 void CountOperator::eventTrigger() {
