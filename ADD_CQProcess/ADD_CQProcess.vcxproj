@@ -119,22 +119,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Car1Topic.h" />
+    <ClInclude Include="Car2Topic.h" />
     <ClInclude Include="Condition.h" />
     <ClInclude Include="CountOperator.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="ClassFactory.h" />
+    <ClInclude Include="EventGeneration.h" />
     <ClInclude Include="IncomingManager.h" />
     <ClInclude Include="MyType.h" />
     <ClInclude Include="Query.h" />
     <ClInclude Include="QueryCondition.h" />
     <ClInclude Include="QueryManager.h" />
+    <ClInclude Include="SERegistration.h" />
     <ClInclude Include="SharedWindow.h" />
     <ClInclude Include="SlidingWindow.h" />
     <ClInclude Include="SumOperator.h" />
+    <ClInclude Include="TopicTuple.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Test1.cpp" />
+    <ClCompile Include="Test_SEGeneration.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

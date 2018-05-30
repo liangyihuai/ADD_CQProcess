@@ -98,6 +98,7 @@ void generateEvents() {
 		}
 		for (int i = 0; i < len; i++) {
 			boost::shared_ptr<Event> msg(new Event());
+			//EventPtr msg(new Event());
 			msg->id = IncomingManager::eventID++;
 			msg->direction = randomFloat(0, 360);
 			msg->topicName = topicNames[randomInt(0, 3)];
