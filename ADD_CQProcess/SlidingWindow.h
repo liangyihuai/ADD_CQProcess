@@ -43,55 +43,65 @@ protected:
 public:
 	SlidingWindow(){}
 
-	void setTimeWindow(int startTime, int offset) {
-		this->startTime = startTime;
-		this->endTime = startTime + offset;
+	void setTimeWindow(int startTime, int offset);
 
-		this->windowType = getWindowType();
-		//this->events = new list<EventPtr>(DEFAULT_WINDOW_CAPACITY);
-	}
+	void setEventWindow(long startEvent, long offset);
 
 	virtual void setSharedWindow(SharedWindow<string>* sharedWindow) = 0;
 
-	void setEventWindow(long startEvent, long offset) {
-		this->startEvent = startEvent;
-		this->endEvent = startEvent + offset;
-
-		this->windowType = getWindowType();
-		//this->events = new list<EventPtr>(startEvent+offset);
-	}
-
 	virtual void updateWindow() = 0;
 
-	void checkWindow() {
-		if ((timeStride != 0 && eventStride != 0)
-			|| (timeStride == 0 && eventStride == 0)) {
-			std::cout << "both 0 or neither 0" << std::endl;
-			throw 0;
-		}
-		
-		if ((endTime == 0 && endEvent == 0)
-			|| (endTime != 0 && endEvent != 0)) {
-			std::cout << "both 0 or neither 0" << std::endl;
-			throw 0;
-		}
-	}
+	virtual void addEventInSharedWin(EventPtr event) = 0;
 
+	void checkWindow();
 
-	WINDOW_TYPE getWindowType() {
-		checkWindow();
-		if (endTime != 0) {
-			if (timeStride != 0) 
-				return WINDOW_TYPE::TIME_LEN_TIME_STRIDE;
-			else return WINDOW_TYPE::TIME_LEN_EVENT_STRIDE;
-		}
-		else {
-			if (timeStride != 0)
-				return WINDOW_TYPE::EVENT_LEN_TIME_STRIDE;
-			else return WINDOW_TYPE::EVENT_LEN_EVENT_STRIDE;
-		}
-	}
+	WINDOW_TYPE getWindowType();
 };
 
 #endif // !SLIDING_WINDOW
 
+void SlidingWindow::setTimeWindow(int startTime, int offset) {
+	this->startTime = startTime;
+	this->endTime = startTime + offset;
+
+	this->windowType = getWindowType();
+	//this->events = new list<EventPtr>(DEFAULT_WINDOW_CAPACITY);
+}
+
+
+void SlidingWindow::setEventWindow(long startEvent, long offset) {
+	this->startEvent = startEvent;
+	this->endEvent = startEvent + offset;
+
+	this->windowType = getWindowType();
+	//this->events = new list<EventPtr>(startEvent+offset);
+}
+
+void SlidingWindow::checkWindow() {
+	if ((timeStride != 0 && eventStride != 0)
+		|| (timeStride == 0 && eventStride == 0)) {
+		std::cout << "both 0 or neither 0" << std::endl;
+		throw 0;
+	}
+
+	if ((endTime == 0 && endEvent == 0)
+		|| (endTime != 0 && endEvent != 0)) {
+		std::cout << "both 0 or neither 0" << std::endl;
+		throw 0;
+	}
+}
+
+
+WINDOW_TYPE SlidingWindow::getWindowType() {
+	checkWindow();
+	if (endTime != 0) {
+		if (timeStride != 0)
+			return WINDOW_TYPE::TIME_LEN_TIME_STRIDE;
+		else return WINDOW_TYPE::TIME_LEN_EVENT_STRIDE;
+	}
+	else {
+		if (timeStride != 0)
+			return WINDOW_TYPE::EVENT_LEN_TIME_STRIDE;
+		else return WINDOW_TYPE::EVENT_LEN_EVENT_STRIDE;
+	}
+}

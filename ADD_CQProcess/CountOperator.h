@@ -166,7 +166,7 @@ void CountOperator::insert(EventPtr event) {
 		//time trigger
 	}
 
-	//cout << "own window size "<< name << ": " << events.size() << endl;
+	//cout << "own window "<< name << " size: " << events.size() << endl;
 }
 
 void CountOperator::eventTrigger() {

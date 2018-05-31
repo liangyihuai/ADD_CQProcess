@@ -7,7 +7,19 @@
 #include <map>
 #include "Query.h"
 #include <set>
+#include <time.h>
+#include <chrono>
+#include <thread>
 #include "MyType.h"
+
+using namespace std;
+
+clock_t max_time = 0;
+
+long long sum = 0;
+
+long count_time = 0;
+
 
 static class QueryManager {
 public:
@@ -68,13 +80,37 @@ public:
 		//	}
 		if (eventTriggerQueries.find(event->topicName) != eventTriggerQueries.end()) {
 			set<Query*> * vec = eventTriggerQueries[event->topicName];
+
+			
+
 			for (auto vecIter = vec->begin(); vecIter != vec->end(); vecIter++) {//vector
 				//cout << *event << endl;
 				if ((*vecIter)->matchingCondition(event)) {
+					
+					clock_t start = clock();
+
 					//cout << "-count-" << *event << endl;
 					updateCQ(*vecIter, event);
+					
+
+					count_time++;
+					clock_t diff = clock() - start;
+					if (diff > max_time) max_time = diff;
+					sum += diff;
+
+					if (count_time % 5000 == 0) {
+						cout << count_time << endl;
+					}
+
+					if (count_time >= 100000) {
+						cout << "average time per event: " << sum / count_time << endl;
+						cout << "max time: " << max_time << endl;
+						this_thread::sleep_for(chrono::milliseconds(10000000));
+					}
 				}
 			}
+
+			
 		}
 
 		//}

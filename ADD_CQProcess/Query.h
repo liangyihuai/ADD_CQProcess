@@ -3,7 +3,6 @@
 #ifndef QUERY
 #define QUERY
 
-
 #include "Event.h"
 
 #include <iostream>
@@ -11,10 +10,6 @@
 #include <string>
 #include "MyType.h"
 #include "Condition.h"
-
-//a pointer points to a function.
-//typedef bool(*ConditionFuncType)(EventPtr eventPtr);
-
 
 class Query {
 protected:
@@ -42,27 +37,25 @@ public:
 
 	string getTopic() { return this->topicName; }
 
-	void setCondition(Condition * conditon) {
-		this->condition = conditon;
-	}
+	void setCondition(Condition * conditon) {this->condition = conditon;}
 
 	virtual void insert(EventPtr event) = 0;
 
 	virtual void display() = 0;
 
-	bool matchingCondition(EventPtr event) {
-		if (!this->condition) {
-			cout << "the query condition is unset!" << endl;
-			throw 1;
-		}
-		condition->setCurrentEvent(event);
-		return condition->satisfyConditon();
-	}
-
-
-	//ConditionFuncType conditionFunction = nullptr;
+	bool matchingCondition(EventPtr event);
 
 };
 #endif // !QUERY
+
+
+bool Query::matchingCondition(EventPtr event) {
+	if (!this->condition) {
+		cout << "the query condition is unset!" << endl;
+		throw 1;
+	}
+	condition->setCurrentEvent(event);
+	return condition->satisfyConditon();
+}
 
 
