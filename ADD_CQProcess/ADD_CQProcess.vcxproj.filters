@@ -16,6 +16,9 @@
     <Filter Include="Header Files\event_generate">
       <UniqueIdentifier>{e27a92a8-3b7c-465d-9e49-223494b5f151}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{7ff700ae-d4f9-48d6-b682-bcebb5ad9a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueryCondition.h">
@@ -72,6 +75,9 @@
     <ClInclude Include="Car2Topic.h">
       <Filter>Header Files\event_generate</Filter>
     </ClInclude>
+    <ClInclude Include="Queries.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Test_SEGeneration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_sliding_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

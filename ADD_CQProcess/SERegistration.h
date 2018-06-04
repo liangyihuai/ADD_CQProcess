@@ -1,5 +1,6 @@
 #pragma once
 #ifndef SE_REGISTRATION
+#define SE_REGISTRATION
 
 #include "Event.h"
 #include "ClassFactory.h"

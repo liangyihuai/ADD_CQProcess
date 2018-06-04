@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef UTILS
+#define UTILS
+
 #include <chrono>
 
 using namespace std;
@@ -13,3 +16,6 @@ long long getTime() {
 	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
 	return ms.count();
 }
+
+
+#endif // !UTILS

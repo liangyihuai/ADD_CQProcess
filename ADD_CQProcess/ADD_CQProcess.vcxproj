@@ -126,6 +126,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="ClassFactory.h" />
     <ClInclude Include="EventGeneration.h" />
+    <ClInclude Include="Queries.h" />
     <ClInclude Include="IncomingManager.h" />
     <ClInclude Include="MyType.h" />
     <ClInclude Include="Query.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Test1.cpp" />
     <ClCompile Include="Test_SEGeneration.cpp" />
+    <ClCompile Include="test_sliding_window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,6 +9,9 @@
 #include <string>
 #include "MyType.h"
 #include "QueryManager.h"
+#include <chrono>
+#include <thread>
+#include "SharedWindow.h"
 
 
 class CountOperator : public Query, public SlidingWindow {
@@ -65,14 +68,25 @@ private:
 };
 
 void CountOperator::display() {
-	//std::cout << "topic: "<< topicName<<", count" << name << " result: "<< currCount <<std::endl;
+	cout << "--------------------" << endl;
+	std::cout << "count" << name << " result: " << currCount << "; topicName: "<< topicName<<std::endl;
+	cout << *this->condition << endl;
+
+	
 }
+
+long long sum_time = 0.0;
+long update_count = 0;
+long long max_time = 0.0;
 
 void CountOperator::updateWindow() {
 	checkWindow();
 	WINDOW_TYPE window = this->windowType;
 
 	if (window == WINDOW_TYPE::TIME_LEN_TIME_STRIDE || window == WINDOW_TYPE::TIME_LEN_EVENT_STRIDE) {
+		//***
+		//auto start_time = std::chrono::high_resolution_clock::now();
+
 		//window length is "timelen", return result every "stride"
 		int currSize = events.size();
 
@@ -107,6 +121,24 @@ void CountOperator::updateWindow() {
 			}
 			currCount += count_shared_window;
 		}
+
+		////****
+		//auto elapsed = std::chrono::high_resolution_clock::now() - start_time;
+
+		//long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
+		////cout << microseconds << endl;
+		//if (microseconds > max_time) max_time = microseconds;
+		//sum_time += microseconds;
+		//update_count++;
+
+		//if (update_count >= 500) {
+		//	cout << "sum_time: " << sum_time << endl;
+		//	cout << "count: " << update_count << endl;
+		//	cout << "everage: " << ((double)sum_time / update_count) << endl;
+		//	cout << "max time: " << max_time << endl;
+		//	this_thread::sleep_for(chrono::milliseconds(100000));
+		//}
 	}
 }
 
@@ -176,6 +208,21 @@ void CountOperator::eventTrigger() {
 		updateWindow();
 		display();
 		eventTriggerCount = 0;
+
+		if (IS_DEBUGGING) {
+			for (EventPtr e : events) {
+				cout << "--- matching event for count: " <<name <<", "<< *e << endl;
+			}
+
+			if (shareWindow) {
+				cout << "\nevent size in shared window: " << shareWindow->size() 
+					<< ", shared "<< *(shareWindow->getQueryCondition())<<endl;
+				for (SharedWindow<string>::Iterator iter = shareWindow->begin(name); iter != shareWindow->end(); ++iter) {
+					cout << "--- matching shared event: " << *iter.getData() << endl;
+				}
+			}
+			cout << "-------------------------------" << endl;
+		}
 	}
 }
 

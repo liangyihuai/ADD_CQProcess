@@ -1,5 +1,6 @@
 #pragma once
 #ifndef EVENT_GENERATION
+#define EVENT_GENERATION
 
 #include <iostream>
 #include <string>

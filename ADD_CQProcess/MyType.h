@@ -8,6 +8,10 @@ typedef boost::shared_ptr<Event> EventPtr;
 #endif // !EVENT_PTR
 
 
+#ifndef DEBUGGING
+#define DEBUGGING
+extern bool IS_DEBUGGING = true;
+#endif // !DEBUGGING
 
 
 using namespace std;

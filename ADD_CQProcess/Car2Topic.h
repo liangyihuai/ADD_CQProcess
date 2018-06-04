@@ -1,6 +1,7 @@
 #pragma once
 
 #ifndef CAR2_TOPIC
+#define CAR2_TOPIC
 
 #include "SERegistration.h"
 #include "MyType.h"

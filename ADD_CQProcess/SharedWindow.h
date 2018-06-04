@@ -30,9 +30,9 @@ namespace shared {
 		Node<T> * tail = nullptr;//the last node
 		int size = 0;//the size of the node
 	public:
-		Node<T> * getHead() { return this->head; }//get the first node
+		Node<T> * getHead()const { return this->head; }//get the first node
 
-		Node<T>* getTail() { return this->tail; }//get the last node
+		Node<T>* getTail()const { return this->tail; }//get the last node
 
 		void push_back(T data) {//insert data next to the tail.
 			Node<T> * newNode = new Node<T>(data);
@@ -97,8 +97,24 @@ using namespace shared;
 
 template <class T> // type of query name
 class SharedWindow {
-public:
+private:
+	//store queryID and associated endPointers of the query.
+	//Each query has one endPointers. endPointer points to 
+	//the oldest node of shared window standing for the query.
+	map<T, Node<EventPtr>*> queryID_event_map;
 
+	//store shared events.
+	SharedQueue<EventPtr> events;
+
+	//the query condition of the shared window. Indicating the events will store 
+	//in this shared window if they meet the qury condition.
+	Condition *queryCondition = nullptr;
+
+	//store query ID of empty endPointers.
+	//Over new event arriving, these empty pointers will point to the new-arriving event.
+	list<string> emptyPointers;
+
+public:
 	void addEvent(EventPtr event);
 
 	void addQuery(T queryID);
@@ -121,22 +137,51 @@ public:
 	//get the last event of the specified query.
 	EventPtr back();
 
-private:
-	//store queryID and associated endPointers of the query.
-	//Each query has one endPointers. endPointer points to 
-	//the oldest node of shared window standing for the query.
-	map<T, Node<EventPtr>*> queryID_event_map;
+	int size() { return events.getSize(); }
 
-	//store shared events.
-	SharedQueue<EventPtr> events;
+	//inner class
+	class Iterator {
+	private:
+		Node<EventPtr> *currPtr;
+	public:
+		Iterator() {}
+		Iterator(Node<EventPtr> *head):currPtr(head) {}
 
-	//the query condition of the shared window. Indicating the events will store 
-	//in this shared window if they meet the qury condition.
-	Condition *queryCondition = nullptr;
+		EventPtr getData() const {
+            return currPtr->data;
+        }
 
-	//store query ID of empty endPointers.
-	//Over new event arriving, these empty pointers will point to the new-arriving event.
-	list<string> emptyPointers;
+
+
+        Node<EventPtr>* operator->() const {
+            return currPtr;
+        }
+
+		Iterator& operator++() {
+            currPtr = currPtr->next;
+            return *this;
+        }
+        
+		bool operator==(const Iterator &arg) const {
+             return arg.currPtr == this->currPtr;
+		}
+
+        bool operator!=(const Iterator &arg) const {
+             return arg.currPtr != this->currPtr;
+		}
+	};
+
+
+	Iterator begin(T queryID) {
+		Node<EventPtr>* headNode = this->queryID_event_map[queryID];
+		return Iterator(headNode);
+	}
+
+	Iterator end() const {
+		const Node<EventPtr> * last = events.getTail();
+		if (!last) return Iterator(nullptr);
+		return Iterator(last->next);
+	}
 
 };
 

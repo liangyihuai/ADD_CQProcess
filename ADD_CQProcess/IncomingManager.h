@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef INCOMING_MANAGER
+#define INCOMING_MANAGER
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -13,7 +16,7 @@
 
 #include "MyType.h"
 
-#define QUEUE_CAPACITY 1000
+#define QUEUE_CAPACITY 30000
 
 #define random(a, b) (rand() % (b-a) + a)
 #define randomInt(a, b) (rand() % b + a)
@@ -29,7 +32,7 @@ public:
 		return size;
 	}
 
-	void outputEvents();
+	static void outputEvents();
 
 	static long eventID;
 
@@ -41,6 +44,8 @@ private:
 	static int size;
 	
 };
+
+#endif // !INCOMING_MANAGER
 
 //queue<Event*> IncomingManager::eventQueue;
 list<EventPtr> IncomingManager::eventQueue;
@@ -104,8 +109,8 @@ void generateEvents() {
 			msg->topicName = topicNames[randomInt(0, 3)];
 			msg->elevation = randomFloat(-30, 100);
 			msg->speed = randomFloat(-30, 100);
-			msg->longitude = randomFloat(0, 182);
-			msg->latitude = randomFloat(0, 92);
+			msg->longitude = randomFloat(0, 180);
+			msg->latitude = randomFloat(0, 90);
 			msg->time = getTime();
 
 			//cout << *msg << endl;
@@ -114,7 +119,7 @@ void generateEvents() {
 			mutex.unlock();
 		}
 		//this_thread::sleep_for(chrono::milliseconds(500));
-		len = random(1, 7);
+		//len = random(1, 7);
 		//cout << "event num in the buffer: " << IncomingManager::bufferSize() << "  \n";
 	}
 }

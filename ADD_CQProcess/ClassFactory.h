@@ -4,10 +4,13 @@
 #include "MyType.h"
 
 #ifndef PTR_CREATE_OBJECT
+#define PTR_CREATE_OBJECT
+
 typedef EventPtr (*PTRCreateObject)(TopicTuple* tuple);
 #endif // !PTR_CREATE_OBJECT
 
 #ifndef EVENT_FACTORY
+#define EVENT_FACTORY
 
 
 
